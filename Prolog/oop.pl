@@ -30,11 +30,14 @@ is_parts([First | Rest]):-
 %% it in the “knowledge base” by Prolog.
 
 def_class(Name, []):-
-    atom(Name).
+    atom(Name),
+    assert(class([Name, [], []])).
 
 def_class(Name, Parents):-
     atom(Name),
-    is_list(Parents).
+    is_list(Parents),
+    maplist(is_class, Parents),
+    assert(class([Name, Parents, []])).
 
 %%% def_class/3
 %% The def_class predicate defines the structure of a class and stores
@@ -44,8 +47,8 @@ def_class(Name, Parents, Parts):-
     atom(Name),
     is_list(Parents),
     is_parts(Parts),
-    assert(class([Name,Parents, Parts])).
-
+    maplist(is_class, Parents),
+    assert(class([Name, Parents, Parts])).
 
 
 
@@ -62,6 +65,29 @@ is_class(ClassName):-
 
 
 %%%  make/2
+make(InstanceName, ClassName):-
+    atom(InstanceName),
+    atom(ClassName),
+    is_class(ClassName),
+    assert(instance([InstanceName, ClassName])).
+
+make(InstanceName, ClassName):-
+    var(InstanceName),
+    atom(ClassName),
+    is_class(ClassName),
+    assert(instance([InstanceName, ClassName])),
+    InstanceName = istance([InstanceName, ClassName]).
+
+%%verificare
+make(InstanceName, ClassName):-
+    atom(InstanceName),
+    is_class(ClassName),
+    InstanceName =.. Instance,
+    %verificare
+    second(Instance, X),
+    is_istance(X).
+
+%    assert(istance([InstanceName, ClassName])).
 
 
 %%% field/3
