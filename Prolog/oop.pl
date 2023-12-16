@@ -3,7 +3,7 @@
 
 %%% Predicati dinamici (per evitare warnings), cambiare
 :- dynamic class/1.
-
+:- dynamic instance/1.
 
 %%% is_parts/1
 %% The is_parts(Element) predicate is True whene the elements of the
@@ -61,7 +61,16 @@ is_class(ClassName):-
     current_predicate(class/1), !,
     class([ClassName, _, _]).
 
+%%% is_instance/1
+is_instance(Value):-
+    current_predicate(instance/1),
+    instance(Value).
 
+
+%%% is_instance/2
+%is_instance(Value, ClassName):-
+%    atom(ClassName),
+%    is_class(ClassName).
 
 
 %%%  make/2
@@ -88,6 +97,8 @@ make(InstanceName, ClassName):-
     is_istance(X).
 
 %    assert(istance([InstanceName, ClassName])).
+
+
 
 
 %%% field/3
