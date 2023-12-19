@@ -24,9 +24,12 @@ is_parts([First | Rest]):-
     is_parts(Rest).
 
 
+
+
 %%% load_method/3
+%% True quando carica i metodi nella base di conoscenza prolog
 load_method(_Name, _ArgList, _Form):-
-    assert(talk(e1):-
+    assert(name(e1):-
 	       write("Ciao")).
 
 
@@ -45,6 +48,8 @@ def_class(Name, Parents):-
     is_list(Parents),
     maplist(is_class, Parents),
     assert(class([Name, Parents, []])).
+
+
 
 %%% def_class/3
 %% The def_class predicate defines the structure of a class and stores
