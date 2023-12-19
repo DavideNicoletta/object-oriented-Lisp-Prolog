@@ -17,10 +17,17 @@ is_parts(field(_Name, _Value, _Type)).
 
 is_parts(method(_Name, ArgList, _Form)):-
     is_list(ArgList).
+    %assert(method([Name, ArgList, Form])).
 
 is_parts([First | Rest]):-
     is_parts(First),
     is_parts(Rest).
+
+
+%%% load_method/3
+load_method(_Name, _ArgList, _Form):-
+    assert(talk(e1):-
+	       write("Ciao")).
 
 
 
@@ -99,7 +106,11 @@ make(InstanceName, ClassName):-
 %    assert(istance([InstanceName, ClassName])).
 
 
-
+%%% inst/2
+inst(InstanceName, Instance):-
+    atom(InstanceName),
+    current_predicate(instance/1),
+    instance([InstanceName | Instance]).
 
 %%% field/3
 
