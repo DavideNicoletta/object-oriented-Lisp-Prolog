@@ -73,16 +73,18 @@ is_class(ClassName):-
     current_predicate(class/1), !,
     class([ClassName, _, _]).
 
+
+
 %%% is_instance/1
 is_instance(Value):-
-    current_predicate(instance/1),
-    instance(Value).
+    instance([Value, _]).
 
 
 %%% is_instance/2
-%is_instance(Value, ClassName):-
-%    atom(ClassName),
-%    is_class(ClassName).
+is_instance(Value, ClassName):-
+    instance([Value, Class]),
+    class([Class, [ClassName], _]).
+
 
 
 %%%  make/2
@@ -115,7 +117,7 @@ make(InstanceName, ClassName):-
 inst(InstanceName, Instance):-
     atom(InstanceName),
     current_predicate(instance/1),
-    instance([InstanceName | Instance]).
+    instance([InstanceName ,  Instance]).
 
 %%% field/3
 
