@@ -1,7 +1,7 @@
 %%%% -*- Mode: Prolog -*-
 %%%% 858101 Nicoletta Davide
 
-%%% Predicati dinamici (per evitare warnings), cambiare
+%%% Predicati dinamici
 :- dynamic class/1.
 :- dynamic instance/1.
 
@@ -23,17 +23,41 @@ is_parts([First | Rest]):-
     is_parts(First),
     is_parts(Rest).
 
+%%% is_method/1
+is_method(method(_, _, _)).
 
+%%% is_field/1
+is_field(field(_Name, _Value, _Type)).
 
+%%% is_write/1
+is_write(write(_)).
 
-%%% load_method/3
+%%% load_method/1
 %% True quando carica i metodi nella base di conoscenza prolog
-load_method(_Name, _ArgList, _Form):-
-    assert(name(e1):-
-	       write("Ciao")).
+%load_method(_Name, _ArgList, Form):-
+%     write(Form).
 
 
 
+%%% create_method/1
+%create_method([write(X), field(this, X, _)], Method):-
+%    is_write(Element),
+    
+%    atom_concat(Method, Element)
+
+%create_method([Element | Rest], Method):-
+%    is_field(Element).
+
+
+
+
+%%% check_method/1
+%check_method([method(X, Y, Z) | _]):-
+%    load_method(X, Y, Z).
+
+%check_method([_ | Rest]):-
+%    check_method(Rest).
+    
 
 %%% def_class/2
 %% The def_class predicate defines the structure of a class and stores
@@ -92,12 +116,16 @@ make(InstanceName, ClassName):-
     atom(InstanceName),
     atom(ClassName),
     is_class(ClassName),
+%    class([ClassName, _, X]),
+%    check_method(X),
     assert(instance([InstanceName, ClassName])).
 
 make(InstanceName, ClassName):-
     var(InstanceName),
     atom(ClassName),
     is_class(ClassName),
+%    class([ClassName, _, X]),
+%    check_method(X),
     assert(instance([InstanceName, ClassName])),
     InstanceName = istance([InstanceName, ClassName]).
 
@@ -105,12 +133,14 @@ make(InstanceName, ClassName):-
 make(InstanceName, ClassName):-
     atom(InstanceName),
     is_class(ClassName),
+%    class([ClassName, _, X]),
+%    check_method(X),
     InstanceName =.. Instance,
     %verificare
     second(Instance, X),
     is_istance(X).
 
-%    assert(istance([InstanceName, ClassName])).
+%   assert(istance([InstanceName, ClassName])).
 
 
 %%% inst/2
@@ -120,7 +150,18 @@ inst(InstanceName, Instance):-
     instance([InstanceName ,  Instance]).
 
 %%% field/3
+field(Instance, FieldName, Result):-
+    is_instance(Instance),
+    instance([Instance, ClassName]),
+    class([ClassName, _, Field]),
+    throwField(Field, FieldName, Result).
 
+
+%%% throwField/3
+throwField([field(FieldName, Result) | _], FieldName, Result).
+throwField([_ | Rest], FieldName, Result):-
+    throwField(Rest, FieldName, Result).
+					    
 
 
 
